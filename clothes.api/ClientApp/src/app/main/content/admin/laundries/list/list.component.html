@@ -1,0 +1,120 @@
+<div id="laundries" class="page-layout carded fullwidth" fusePerfectScrollbar>
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg mat-accent-bg"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header white-fg"
+             fxLayout="column" fxLayoutAlign="center center"
+             fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo my-12 m-sm-0"
+                 fxLayout="row" fxLayoutAlign="start center">
+				<mat-icon class="logo-icon mr-16" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">local_laundry_service</mat-icon>
+                <span class="logo-text h1" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">Lavanderias</span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-input-wrapper mx-12 m-md-0"
+                 fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
+                <label for="search" class="mr-8">
+                    <mat-icon class="secondary-text">search</mat-icon>
+                </label>
+                <mat-form-field floatPlaceholder="never" fxFlex="1 0 auto">
+                    <input id="search" matInput #filter placeholder="Buscar">
+                </mat-form-field>
+            </div>
+            <!-- / SEARCH -->
+
+            <button mat-raised-button
+                    [routerLink]="'/admin/lavanderias/new'"
+                    class="add-product-button mat-white-bg my-12 mt-sm-0">
+                <span>Nova lavanderia</span>
+            </button>
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card mat-white-bg">
+
+			<mat-table class="laundries-table"
+					   #table [dataSource]="dataSource"
+					   matSort
+					   [@animateStagger]="{value:'50'}"
+					   fusePerfectScrollbar>
+
+				<!-- ID Column -->
+				<ng-container cdkColumnDef="logo">
+					<mat-header-cell *cdkHeaderCellDef></mat-header-cell>
+					<mat-cell *cdkCellDef="let laundry" class="mat-column-image">
+						<img class="product-image" *ngIf="laundry.logo" src="assets/Uploads/Laundries/{{laundry.logo}}">
+						<img class="product-image" *ngIf="!laundry.logo" [src]="'assets/images/ecommerce/product-image-placeholder.png'"> 
+					</mat-cell>
+				</ng-container>
+
+
+				<!-- ID Column -->
+				<ng-container cdkColumnDef="id">
+					<mat-header-cell *cdkHeaderCellDef mat-sort-header>ID</mat-header-cell>
+					<mat-cell *cdkCellDef="let laundry">
+						<p class="text-truncate">{{laundry.laundryId}}</p>
+					</mat-cell>
+				</ng-container>
+
+
+
+				<!-- ID Column -->
+				<ng-container cdkColumnDef="razaoSocial">
+					<mat-header-cell *cdkHeaderCellDef mat-sort-header>Razão Social</mat-header-cell>
+					<mat-cell *cdkCellDef="let laundry">
+						<p class="text-truncate">{{laundry.razaoSocial}}</p>
+					</mat-cell>
+				</ng-container>
+				<!-- ID Column -->
+				<ng-container cdkColumnDef="nomeFantasia">
+					<mat-header-cell *cdkHeaderCellDef mat-sort-header>Nome Fantasia</mat-header-cell>
+					<mat-cell *cdkCellDef="let laundry">
+						<p class="text-truncate">{{laundry.nomeFantasia}}</p>
+					</mat-cell>
+				</ng-container>
+				<!-- ID Column -->
+				<ng-container cdkColumnDef="cnpj">
+					<mat-header-cell *cdkHeaderCellDef mat-sort-header>CNPJ</mat-header-cell>
+					<mat-cell *cdkCellDef="let laundry">
+						<p class="text-truncate">{{laundry.cnpj}}</p>
+					</mat-cell>
+				</ng-container><!-- ID Column -->
+				<ng-container cdkColumnDef="ie">
+					<mat-header-cell *cdkHeaderCellDef mat-sort-header>IE</mat-header-cell>
+					<mat-cell *cdkCellDef="let laundry">
+						<p class="text-truncate">{{laundry.ie}}</p>
+					</mat-cell>
+				</ng-container>
+
+				<mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+				<mat-row *cdkRowDef="let laundry; columns: displayedColumns;"
+						 class="product"
+						 matRipple
+						 [routerLink]="'/admin/lavanderias/'+laundry.laundryId">
+				</mat-row>
+			</mat-table>
+
+            <mat-paginator #paginator
+                           [length]="dataSource.filteredData.length"
+                           [pageIndex]="0"
+                           [pageSize]="10"
+                           [pageSizeOptions]="[5, 10, 25, 100]">
+            </mat-paginator>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

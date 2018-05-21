@@ -1,0 +1,240 @@
+<div id="laundry" class="page-layout carded fullwidth" fusePerfectScrollbar>
+	<!-- TOP BACKGROUND -->
+	<div class="top-bg mat-accent-bg"></div>
+	<!-- / TOP BACKGROUND -->
+	<!-- CENTER -->
+	<div class="center">
+		<!-- HEADER -->
+		<div class="header white-fg" fxLayout="row" fxLayoutAlign="space-between center">
+			<!-- APP TITLE -->
+			<div fxLayout="row" fxLayoutAlign="start center">
+				<button class="mr-0 mr-sm-16" mat-icon-button [routerLink]="'/admin/lavanderias'">
+					<mat-icon>arrow_back</mat-icon>
+				</button>
+				<div class="laundry-image mr-8 mr-sm-16" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+					<img *ngIf="laundry.logo" src="assets/Uploads/Laundries/{{laundry.logo}}">
+					<img *ngIf="!laundry.logo" [src]="'assets/images/ecommerce/product-image-placeholder.png'">
+				</div>
+				<div fxLayout="column" fxLayoutAlign="start start"
+					 *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+					<div class="h2" *ngIf="pageType ==='edit'">
+						{{laundry.nomeFantasia}}
+					</div>
+					<div class="h2" *ngIf="pageType ==='new'">
+						Nova Lavanderia
+					</div>
+					<div class="subtitle secondary-text">
+						<span>Detalhes da lavanderia</span>
+					</div>
+				</div>
+			</div>
+			<!-- / APP TITLE -->
+			<button mat-raised-button
+					class="save-laundry-button mat-white-bg mt-16 mt-sm-0"
+					[disabled]="laundryForm.invalid || inProcess"
+					*ngIf="pageType ==='new'" (click)="addLaundry()">
+				<span>Adicionar</span>
+			</button>
+			<button mat-raised-button
+					class="save-laundry-button mat-white-bg mt-16 mt-sm-0"
+					[disabled]="laundryForm.invalid || laundryForm.pristine || inProcess"
+					*ngIf="pageType ==='edit'" (click)="saveLaundry()">
+				<span>Salvar</span>
+			</button>
+		</div>
+		<!-- / HEADER -->
+		<!-- CONTENT CARD -->
+		<div class="content-card mat-white-bg">
+			<!-- CONTENT -->
+			<div class="content"> 
+
+				<form name="laundryForm" [formGroup]="laundryForm" class="laundry w-100-p" fxLayout="column" fxFlex>
+					<mat-tab-group>
+						<mat-tab label="Informações Básicas">
+							<div class="tab-content p-24" fusePerfectScrollbar>
+								<div *ngIf="pageType ==='edit'" class="input-change-logo"> 
+
+									<label mat-raised-button for="uploader" class="save-laundry-button mat-primary-bg mt-16 mt-sm-0 mat-raised-button ng-tns-c18-4 ng-star-inserted">Alterar logo</label>
+
+									<input type="file"
+										   class="ng-hide"
+										   #uploader
+										   id="uploader"
+										   name="logo"
+										   (change)="fileChange(uploader.files)"
+										   placeholder="Logo">
+								</div>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="nomeFantasia"
+										   formControlName="nomeFantasia"
+										   placeholder="Nome Fantasia"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="razaoSocial"
+										   formControlName="razaoSocial"
+										   placeholder="Razão Social"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="cnpj"
+										   formControlName="cnpj"
+										   placeholder="CNPJ"
+										   required
+										   mask='00.000.000/0000-00'>
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="ie"
+										   formControlName="ie"
+										   placeholder="IE"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   type="email"
+										   name="email"
+										   formControlName="email"
+										   placeholder="E-mail"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-100-p"  *ngIf="pageType ==='new'">
+									<input matInput
+										   type="email"
+										   name="emailConfirm"
+										   formControlName="emailConfirm"
+										   placeholder="Confirmar E-mail" >
+									<p *ngIf="errorsSubmit.EmailConfirm">
+										{{errorsSubmit.EmailConfirm[0]}}
+									</p>
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<mat-select placeholder="Status" formControlName="statusId" required>
+										<mat-option *ngFor="let status of allStatus" [value]="status.statusId">
+											{{status.name}}
+										</mat-option>
+									</mat-select>
+								</mat-form-field>
+								<button mat-raised-button
+										class="save-laundry-button mat-red-bg mt-16 mt-sm-0"
+										*ngIf="pageType ==='edit'" (click)="removeLaundry()" type="button">
+									<span>Excluir</span>
+								</button>
+							</div>
+						</mat-tab>
+						<mat-tab label="Endereço" formGroupName="address">
+							<div class="tab-content p-24" fusePerfectScrollbar>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="zipCode"
+										   formControlName="zipCode"
+										   placeholder="CEP"
+										   mask='00000-000'
+										   (blur)="loadZipCode()"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="street"
+										   formControlName="street"
+										   placeholder="Rua"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   type="number"
+										   name="number"
+										   formControlName="number"
+										   placeholder="Número"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="complement"
+										   formControlName="complement"
+										   placeholder="Complemento">
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="neighborhood"
+										   formControlName="neighborhood"
+										   placeholder="Bairro"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="city"
+										   formControlName="city"
+										   placeholder="Cidade"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="state"
+										   formControlName="state"
+										   placeholder="Estado"
+										   mask="AA"
+										   style="text-transform: uppercase"
+										   required>
+								</mat-form-field>
+
+								<mat-form-field class="w-100-p">
+									<input matInput
+										   name="country"
+										   formControlName="country"
+										   placeholder="País">
+								</mat-form-field>
+							</div>
+						</mat-tab>
+
+						<mat-tab label="Dados Bancários" formGroupName="bankData">
+							<div class="tab-content p-24" fusePerfectScrollbar>
+								<mat-form-field class="w-100-p">
+									<mat-select placeholder="Banco " formControlName="bankId" required>
+										<mat-option *ngFor="let bank of allBanks" [value]="bank.bankId">
+											{{bank.name}}
+										</mat-option>
+									</mat-select>
+								</mat-form-field>
+								<mat-form-field class="w-75-p">
+									<input matInput
+										   name="agency"
+										   formControlName="agency"
+										   placeholder="Agência"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-25-p">
+									<input matInput
+										   name="digitAgency"
+										   formControlName="digitAgency"
+										   placeholder="Dígito da Agência (0 caso não tenha)"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-75-p">
+									<input matInput
+										   name="checkingAccount"
+										   formControlName="checkingAccount"
+										   placeholder="Conta Corrente"
+										   required>
+								</mat-form-field>
+								<mat-form-field class="w-25-p">
+									<input matInput
+										   name="digitCheckingAccount"
+										   formControlName="digitCheckingAccount"
+										   placeholder="Dígido da Conta Corrente (0 caso não tenha)"
+										   required>
+								</mat-form-field>
+							</div>
+						</mat-tab>
+					</mat-tab-group>
+				</form>
+			</div>
+			<!-- / CONTENT -->
+		</div>
+		<!-- / CONTENT CARD -->
+	</div>
+	<!-- / CENTER -->
+</div>
