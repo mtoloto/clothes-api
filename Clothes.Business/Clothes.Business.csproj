@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\core\Clothes.Core.csproj" />
+    <ProjectReference Include="..\Clothes.Core\Clothes.Core.csproj" />
   </ItemGroup>
 
 </Project>
